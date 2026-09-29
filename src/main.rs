@@ -1,9 +1,9 @@
-use chrono::{Days, NaiveDate, NaiveDateTime, NaiveTime};
+use chrono::{Datelike, Days, Duration, NaiveDate, NaiveDateTime, NaiveTime};
 use chrono_tz::Europe::Bucharest;
 use clap::Parser;
 use icalendar::{Calendar, Component, Event, EventLike, RRule, Tz};
 use serde::Deserialize;
-use std::fs;
+use std::{collections::HashSet, fs};
 
 use crate::Periodicity::EvenWeekly;
 
@@ -19,6 +19,7 @@ struct Semester {
     name: String,
     start_date: String,
     end_date: String,
+    free_days: Vec<String>, // format: YYYY-MM-DD or YYYY-MM-DD->YYYY-MM-DD
 }
 #[derive(Debug, Deserialize, PartialEq, Eq)]
 enum Periodicity {
@@ -104,51 +105,94 @@ fn main() {
 
     let mut calendar = Calendar::new();
 
-    for activity in config.activities {
-        let mut event = Event::new();
-        event.location(&activity.location);
-        event.summary(&activity.cal_name());
-        event.description(&activity.description());
+    let mut exdates: HashSet<NaiveDate> = HashSet::new();
 
-        let f_instance = activity.instances.first().unwrap();
+    for free_day in &config.semester.free_days {
+        let parts: Vec<&str> = free_day.split("->").collect();
 
-        let start_time = NaiveTime::parse_from_str(&f_instance.start_time, "%H:%M")
-            .expect("Wrong start time format");
-        let end_time = NaiveTime::parse_from_str(&f_instance.end_time, "%H:%M")
-            .expect("Wrong end time format");
-
-        let offs = if f_instance.periodicity == EvenWeekly {
-            7
+        let (s, e) = if parts.len() == 2 {
+            (
+                NaiveDate::parse_from_str(parts[0].trim(), "%Y-%m-%d"),
+                NaiveDate::parse_from_str(parts[1].trim(), "%Y-%m-%d"),
+            )
         } else {
-            0
+            (
+                NaiveDate::parse_from_str(free_day.trim(), "%Y-%m-%d"),
+                NaiveDate::parse_from_str(free_day.trim(), "%Y-%m-%d"),
+            )
         };
 
-        let start_date = NaiveDateTime::new(
-            sem_start + Days::new(f_instance.day_of_week - 1 + offs),
-            start_time,
-        );
-        let end_date = NaiveDateTime::new(
-            sem_start + Days::new(f_instance.day_of_week - 1 + offs),
-            end_time,
-        );
+        let start_date = s.expect("Wrong date format for start date");
+        let end_date = e.expect("Wrong date format for end date");
 
-        event.starts((start_date, Bucharest));
-        event.ends((end_date, Bucharest));
-
-        match f_instance.periodicity {
-            Periodicity::Weekly => {
-                event.recurrence(RRule::new(icalendar::Frequency::Weekly).until(sem_end))
-            }
-            Periodicity::OddWeekly | Periodicity::EvenWeekly => event.recurrence(
-                RRule::new(icalendar::Frequency::Weekly)
-                    .interval(2)
-                    .until(sem_end),
-            ),
+        let mut i_date = start_date;
+        while i_date <= end_date {
+            exdates.insert(i_date);
+            i_date += Duration::days(1);
         }
-        .expect("Couldn't add recurrence");
-
-        calendar.push(event);
     }
+
+    for activity in config.activities {
+        for f_instance in &activity.instances {
+            let mut event = Event::new();
+            event.location(&activity.location);
+            event.summary(&activity.cal_name());
+            event.description(&activity.description());
+
+            let start_time = NaiveTime::parse_from_str(&f_instance.start_time, "%H:%M")
+                .expect("Wrong start time format");
+            let end_time = NaiveTime::parse_from_str(&f_instance.end_time, "%H:%M")
+                .expect("Wrong end time format");
+
+            let offs = if f_instance.periodicity == EvenWeekly {
+                7
+            } else {
+                0
+            };
+
+            let start_date = NaiveDateTime::new(
+                sem_start + Days::new(f_instance.day_of_week - 1 + offs),
+                start_time,
+            );
+            let end_date = NaiveDateTime::new(
+                sem_start + Days::new(f_instance.day_of_week - 1 + offs),
+                end_time,
+            );
+
+            event.starts((start_date, Bucharest));
+            event.ends((end_date, Bucharest));
+
+            match f_instance.periodicity {
+                Periodicity::Weekly => {
+                    event.recurrence(RRule::new(icalendar::Frequency::Weekly).until(sem_end))
+                }
+                Periodicity::OddWeekly | Periodicity::EvenWeekly => event.recurrence(
+                    RRule::new(icalendar::Frequency::Weekly)
+                        .interval(2)
+                        .until(sem_end),
+                ),
+            }
+            .expect("Couldn't add recurrence");
+
+            for exdate in &exdates {
+                if exdate.weekday() != start_date.weekday() {
+                    continue;
+                }
+
+                event.add_multi_property(
+                    "EXDATE;TZID=Europe/Bucharest",
+                    &exdate
+                        .and_time(start_time)
+                        .format("%Y%m%dT%H%M%S")
+                        .to_string(),
+                );
+            }
+
+            calendar.push(event);
+        }
+    }
+
+    calendar.timezone(Bucharest);
 
     let ics = calendar.name(&config.semester.name).to_string();
 

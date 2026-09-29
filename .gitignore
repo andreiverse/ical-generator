@@ -1,3 +1,4 @@
 /target
-*.yaml
+config.yaml
+
 *.ics

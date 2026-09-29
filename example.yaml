@@ -1,0 +1,193 @@
+semester:
+  name: "Semestrul 1"
+  start_date: "2026-09-28"
+  end_date: "2027-01-17"
+  free_days:
+    - "2026-12-19->2027-01-03"
+    - "2026-11-30"
+    - "2026-12-01"
+    - "2026-12-25"
+    - "2026-12-26"
+    - "2027-01-01"
+    - "2027-01-02"
+    - "2027-01-06"
+    - "2027-01-07"
+
+activities:
+  - name: "(BI) Bazele informaticii"
+    type: Course
+    location: "Amfiteatrul A"
+    professor: "Profesor Informatică (PI)"
+    instances:
+      - start_time: "08:00"
+        end_time: "10:00"
+        day_of_week: 1
+        periodicity: Weekly
+
+  - name: "(PC) Programarea calculatoarelor"
+    type: Course
+    location: "Amfiteatrul A"
+    professor: "Profesor Programare (PP)"
+    instances:
+      - start_time: "10:00"
+        end_time: "12:00"
+        day_of_week: 1
+        periodicity: Weekly
+
+  - name: "(Eng) Limba Engleza"
+    type: Course
+    location: "Amfiteatrul A"
+    professor: "Profesor Engleză (PE)"
+    instances:
+      - start_time: "12:00"
+        end_time: "14:00"
+        day_of_week: 1
+        periodicity: EvenWeekly
+
+  - name: "(EFS) Sport"
+    type: Seminar
+    location: "Sala sport"
+    professor: "Profesor Sport (PS)"
+    instances:
+      - start_time: "12:00"
+        end_time: "14:00"
+        day_of_week: 1
+        periodicity: OddWeekly
+
+  - name: "(Eng) Limba Engleza"
+    type: Seminar
+    location: "Sala B"
+    professor: "Profesor Engleză (PE)"
+    instances:
+      - start_time: "14:00"
+        end_time: "16:00"
+        day_of_week: 1
+        periodicity: EvenWeekly
+
+  - name: "DPPD"
+    type: Seminar
+    location: "Sala C"
+    professor: "Profesor Pedagogie (PD)"
+    instances:
+      - start_time: "16:00"
+        end_time: "18:00"
+        day_of_week: 1
+        periodicity: Weekly
+      - start_time: "18:00"
+        end_time: "20:00"
+        day_of_week: 1
+        periodicity: Weekly
+      - start_time: "18:00"
+        end_time: "20:00"
+        day_of_week: 3
+        periodicity: Weekly
+
+  - name: "(Fiz) Fizica"
+    type: Lab
+    location: "Laboratorul 1"
+    professor: "Profesor Fizică (PF)"
+    instances:
+      - start_time: "08:00"
+        end_time: "10:00"
+        day_of_week: 2
+        periodicity: Weekly
+
+  - name: "(AM) Analiza matematica"
+    type: Seminar
+    location: "Amfiteatrul B"
+    professor: "Profesor Analiză (PA)"
+    instances:
+      - start_time: "10:00"
+        end_time: "12:00"
+        day_of_week: 2
+        periodicity: Weekly
+
+  - name: "(PC) Programarea calculatoarelor"
+    type: Lab
+    location: "Laboratorul 2"
+    professor: "Profesor Programare Lab (PPL)"
+    instances:
+      - start_time: "12:00"
+        end_time: "15:00"
+        day_of_week: 2
+        periodicity: Weekly
+
+  - name: "(AM) Analiza matematica"
+    type: Course
+    location: "Amfiteatrul A"
+    professor: "Profesor Analiză (PA)"
+    instances:
+      - start_time: "08:00"
+        end_time: "10:00"
+        day_of_week: 3
+        periodicity: Weekly
+
+  - name: "(Fiz) Fizica"
+    type: Course
+    location: "Amfiteatrul A"
+    professor: "Profesor Fizică Curs (PFC)"
+    instances:
+      - start_time: "10:00"
+        end_time: "12:00"
+        day_of_week: 3
+        periodicity: Weekly
+
+  - name: "(BI) Bazele informaticii"
+    type: Lab
+    location: "Laboratorul 3"
+    professor: "Profesor Informatică Lab (PIL)"
+    instances:
+      - start_time: "12:00"
+        end_time: "15:00"
+        day_of_week: 3
+        periodicity: Weekly
+
+  - name: "DPPD"
+    type: Course
+    location: "Sala D"
+    professor: "Profesor Pedagogie (PD)"
+    instances:
+      - start_time: "16:00"
+        end_time: "18:00"
+        day_of_week: 3
+        periodicity: Weekly
+
+  - name: "(Alg) Algebra"
+    type: Seminar
+    location: "Amfiteatrul C"
+    professor: "Profesor Algebră (PAL)"
+    instances:
+      - start_time: "10:00"
+        end_time: "12:00"
+        day_of_week: 4
+        periodicity: Weekly
+
+  - name: "(Fiz) Fizica"
+    type: Seminar
+    location: "Amfiteatrul A"
+    professor: "Profesor Fizică Curs (PFC)"
+    instances:
+      - start_time: "12:00"
+        end_time: "14:00"
+        day_of_week: 4
+        periodicity: OddWeekly
+
+  - name: "(Alg) Algebra"
+    type: Course
+    location: "Amfiteatrul A"
+    professor: "Profesor Algebră (PAL)"
+    instances:
+      - start_time: "14:00"
+        end_time: "16:00"
+        day_of_week: 4
+        periodicity: Weekly
+
+  - name: "(CM1) Complemente de matematică I"
+    type: Course
+    location: "Amfiteatrul A"
+    professor: "Profesor Matematică (PM)"
+    instances:
+      - start_time: "16:00"
+        end_time: "18:00"
+        day_of_week: 4
+        periodicity: Weekly
